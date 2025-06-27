@@ -124,7 +124,6 @@ class BlogService:
         if not blog:
             raise BlogNotFoundException
 
-        # await self.session.delete(blog)
         blog.deleted_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
         return {"message": constants.BLOG_DELETE_SUCCESS}
