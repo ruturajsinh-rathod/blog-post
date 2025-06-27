@@ -36,6 +36,8 @@ class UserModel(Base, TimeStampMixin):
         "BlogModel", back_populates="author"
     )
 
+    likes: Mapped[list["LikeModel"]] = relationship("LikeModel", back_populates="user", cascade="all, delete-orphan")
+
     @classmethod
     def create(cls, email: EmailStr, password: str, role_id: UUID) -> Self:
         """

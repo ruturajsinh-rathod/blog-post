@@ -25,3 +25,5 @@ USER_ROLE_NOT_FOUND = "User role not found"
 UNAUTHORIZEDACCESS = "You are not authorized to perform this action."
 
 BLOG_DELETE_SUCCESS = "Blog deleted successfully"
+
+BLOG_LIKE_SUCCESS = "Blog liked successfully"

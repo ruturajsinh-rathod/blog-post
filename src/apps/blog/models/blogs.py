@@ -33,6 +33,8 @@ class BlogModel(Base, TimeStampMixin):
 
     deleted_at: Mapped[datetime] = mapped_column(nullable=True)
 
+    likes: Mapped[list["LikeModel"]] = relationship("LikeModel", back_populates="blog", cascade="all, delete-orphan")
+
     @classmethod
     def create(cls, name: str, content: str, author_id: UUID) -> Self:
         """
