@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from typing import Self
 from uuid import UUID
 
@@ -29,6 +30,8 @@ class BlogModel(Base, TimeStampMixin):
 
     author_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
     author: Mapped["UserModel"] = relationship("UserModel", back_populates="blogs")
+
+    deleted_at: Mapped[datetime] = mapped_column(nullable=True)
 
     @classmethod
     def create(cls, name: str, content: str, author_id: UUID) -> Self:

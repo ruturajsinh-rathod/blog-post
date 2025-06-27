@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Annotated
 from uuid import UUID
 
@@ -72,7 +73,7 @@ class BlogService:
         Returns:
             Page[BlogModel]: A paginated list of blog posts.
         """
-        stmt = select(BlogModel)
+        stmt = select(BlogModel).where(BlogModel.deleted_at.is_(None))
         return await paginate(self.session, stmt, params)
 
     async def get_by_id(self, blog_id: UUID) -> BlogModel:
@@ -90,7 +91,9 @@ class BlogService:
         """
 
         blog = await self.session.scalar(
-            select(BlogModel).where(BlogModel.id == blog_id)
+            select(BlogModel).where(
+                BlogModel.id == blog_id, BlogModel.deleted_at.is_(None)
+            )
         )
 
         if not blog:
@@ -113,12 +116,14 @@ class BlogService:
         """
 
         blog = await self.session.scalar(
-            select(BlogModel).where(BlogModel.id == blog_id)
+            select(BlogModel).where(
+                BlogModel.id == blog_id, BlogModel.deleted_at.is_(None)
+            )
         )
 
         if not blog:
             raise BlogNotFoundException
 
-        await self.session.delete(blog)
+        blog.deleted_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
         return {"message": constants.BLOG_DELETE_SUCCESS}
