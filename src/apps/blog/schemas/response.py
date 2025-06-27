@@ -1,8 +1,6 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import EmailStr
-
 from core.utils import CamelCaseModel
 
 

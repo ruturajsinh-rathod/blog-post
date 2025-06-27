@@ -26,21 +26,19 @@ class RoleService:
         """
         self.session = session
 
-    async def create(
-        self, name: str
-    ) -> RoleModel:
+    async def create(self, name: str) -> RoleModel:
         """
-                Create a new role in the system.
+        Create a new role in the system.
 
-                Args:
-                    name (str): The name of the role to be created. Must match a valid RoleEnum value.
+        Args:
+            name (str): The name of the role to be created. Must match a valid RoleEnum value.
 
-                Raises:
-                    UserRoleNotFound: If the provided role name does not exist in RoleEnum.
-                    UserRoleAlreadyExists: If a role with the same name already exists in the database.
+        Raises:
+            UserRoleNotFound: If the provided role name does not exist in RoleEnum.
+            UserRoleAlreadyExists: If a role with the same name already exists in the database.
 
-                Returns:
-                    RoleModel: The newly created RoleModel instance.
+        Returns:
+            RoleModel: The newly created RoleModel instance.
         """
 
         if name not in [r.value for r in RoleEnum]:
@@ -49,16 +47,12 @@ class RoleService:
         role = await self.session.scalar(
             select(RoleModel)
             .options(load_only(RoleModel.id))
-            .where(
-                    RoleModel.name == name
-            )
+            .where(RoleModel.name == name)
         )
         if role:
             raise UserRoleAlreadyExists
 
-        role = RoleModel.create(
-             name=name
-        )
+        role = RoleModel.create(name=name)
         self.session.add(role)
 
         return role
@@ -70,7 +64,5 @@ class RoleService:
         Returns:
             Sequence[RoleModel]: A list of all available role records.
         """
-        result = await self.session.scalars(
-            select(RoleModel)
-        )
+        result = await self.session.scalars(select(RoleModel))
         return result.all()

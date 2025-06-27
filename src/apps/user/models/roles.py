@@ -1,14 +1,14 @@
 import uuid
-from typing import Self, List
+from typing import List, Self
 from uuid import UUID
 
+from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from apps.user.models.user import UserModel
 from apps.user.enums import RoleEnum
+from apps.user.models.user import UserModel
 from core.db import Base
 from core.utils.mixins import TimeStampMixin
-from sqlalchemy import Enum as SqlEnum
 
 
 class RoleModel(Base, TimeStampMixin):
@@ -23,7 +23,9 @@ class RoleModel(Base, TimeStampMixin):
 
     __tablename__ = "roles"
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    name: Mapped[RoleEnum] = mapped_column(SqlEnum(RoleEnum, name="roleenum"), unique=True, nullable=False)
+    name: Mapped[RoleEnum] = mapped_column(
+        SqlEnum(RoleEnum, name="roleenum"), unique=True, nullable=False
+    )
 
     users: Mapped[List["UserModel"]] = relationship(back_populates="role")
 
