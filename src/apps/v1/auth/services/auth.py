@@ -13,7 +13,7 @@ from src.apps.v1.user.schemas import LoginResponse
 from src.apps.v1.user.schemas.response import RefreshTokenResponse
 from src.core.auth import create_token, decode_token
 from database.db import db_session
-from src.core.utils.hashing import verify_password
+from src.apps.v1.auth.utils.hashing import verify_password
 
 security = HTTPBearer()
 
