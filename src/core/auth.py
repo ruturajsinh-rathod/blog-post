@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 import constants.messages as constants
+from apps.enums import TokenTypeEnum
 from apps.user.enums import RoleEnum
 from apps.user.exceptions import UnauthorizedAccessException, UserNotFound
 from apps.user.models.user import UserModel
@@ -20,33 +21,36 @@ from core.exceptions import InvalidJWTTokenException
 SECRET_KEY = settings.JWT_SECRET_KEY
 ALGORITHM = settings.JWT_ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXP
+REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXP
 
 security = HTTPBearer()
 
-
-def create_access_token(email: str):
+def create_token(email: str, token_type: str):
     """
-    Generate a JWT access token containing the user's email and blog ID.
-
-    The token includes claims such as subject (email), blog ID, audience,
-    issued at timestamp, and expiration timestamp.
+    Generate a JWT token (access or refresh) containing the user's email and token type.
 
     Args:
         email (str): The email of the user (subject of the token).
+        token_type (str): The type of the token ('access' or 'refresh').
 
     Returns:
         str: The encoded JWT token as a string.
     """
-
     now = datetime.now(tz=timezone.utc)
-    expire = datetime.now(tz=timezone.utc) + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-    )
+
+    if token_type == TokenTypeEnum.ACCESS:
+        expire = now + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    elif token_type == TokenTypeEnum.REFRESH:
+        expire = now + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    else:
+        raise ValueError("Invalid token type. Must be 'access' or 'refresh'.")
+
     claims = {
         "sub": email,
         "aud": settings.APP_NAME,
         "iat": int(now.timestamp()),
         "exp": int(expire.timestamp()),
+        "type": token_type
     }
 
     encoded_jwt = jwt.encode(
@@ -54,23 +58,20 @@ def create_access_token(email: str):
     )
     return encoded_jwt
 
-
-def decode_token(token: str):
+def decode_token(token: str, expected_type: str):
     """
-    Decode and validate a JWT token.
-
-    Verifies the token signature, expiration, and audience. Raises exceptions
-    on failure.
+    Decode and validate a JWT token, ensuring the correct token type.
 
     Args:
         token (str): The JWT token string to decode.
+        expected_type (str): The expected token type ('access' or 'refresh').
 
     Returns:
         dict: The decoded token payload (claims).
 
     Raises:
-        InvalidJWTTokenException: If the token is invalid or expired.
-        HTTPException: For any other JWT-related errors, with 401 status code.
+        InvalidJWTTokenException: If the token is invalid, expired, or incorrect type.
+        HTTPException: For other JWT-related errors.
     """
     try:
         payload = jwt.decode(
@@ -79,7 +80,12 @@ def decode_token(token: str):
             algorithms=[settings.JWT_ALGORITHM],
             audience=settings.APP_NAME,
         )
+
+        if payload.get("type") != expected_type:
+            raise InvalidJWTTokenException(constants.INVALID_TOKEN)
+
         return payload
+
     except DecodeError:
         raise InvalidJWTTokenException(constants.INVALID_TOKEN)
     except ExpiredSignatureError:
@@ -90,7 +96,6 @@ def decode_token(token: str):
             detail="Invalid or expired token",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
 
 async def get_authenticated_user(
     session: Annotated[AsyncSession, Depends(db_session)],
@@ -113,7 +118,7 @@ async def get_authenticated_user(
         UnauthorizedAccessException: If the user's role does not match the required role.
     """
     token = credentials.credentials
-    payload = decode_token(token)
+    payload = decode_token(token, expected_type=TokenTypeEnum.ACCESS)
     email = payload.get("sub")
 
     user = await session.scalar(

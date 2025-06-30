@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str | None = os.getenv("JWT_SECRET_KEY")
     JWT_ALGORITHM: str | None = os.getenv("JWT_ALGORITHM")
     ACCESS_TOKEN_EXP: Optional[int] = os.getenv("ACCESS_TOKEN_EXP")
+    REFRESH_TOKEN_EXP: Optional[int] = os.getenv("REFRESH_TOKEN_EXP")
 
     DATABASE_USER: str | None = os.getenv("DATABASE_USER")
     DATABASE_PASSWORD: str | None = os.getenv("DATABASE_PASSWORD")

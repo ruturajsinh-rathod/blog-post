@@ -14,6 +14,18 @@ class LoginResponse(CamelCaseModel):
     """
 
     access_token: str
+    refresh_token: str
+
+
+class RefreshTokenResponse(CamelCaseModel):
+    """
+    Response model for the token refresh operation.
+
+    Attributes:
+        access_token (str): The newly issued access token
+            that can be used for authenticated requests.
+    """
+    access_token: str
 
 
 class RoleResponse(CamelCaseModel):

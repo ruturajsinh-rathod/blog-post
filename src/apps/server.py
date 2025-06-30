@@ -5,6 +5,7 @@ from fastapi_pagination import add_pagination
 
 import constants
 from apps.blog.controllers import blog_router, like_router
+from apps.auth.controllers import auth_router
 from apps.handlers import start_exception_handlers
 from apps.user.controllers import role_router, user_router
 from config import settings
@@ -15,6 +16,7 @@ def init_routers(_app: FastAPI) -> None:
     Initialize all routers.
     """
     _app.include_router(blog_router)
+    _app.include_router(auth_router)
     _app.include_router(user_router)
     _app.include_router(role_router)
     _app.include_router(like_router)
