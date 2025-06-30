@@ -2,14 +2,14 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Body, Depends, status
 
-from apps.v1.user.enums import RoleEnum
-from apps.v1.user.models.user import UserModel
-from apps.v1.user.schemas.request import CreateUserRoleRequest
-from apps.v1.user.schemas.response import RoleResponse
-from apps.v1.user.services.roles import RoleService
-from core.auth import role_required
-from core.basic_auth import basic_auth
-from core.utils.schema import BaseResponse
+from src.apps.v1.user.enums import RoleEnum
+from src.apps.v1.user.models.user import UserModel
+from src.apps.v1.user.schemas.request import CreateUserRoleRequest
+from src.apps.v1.user.schemas.response import RoleResponse
+from src.apps.v1.user.services.roles import RoleService
+from src.core.auth import role_required
+from src.core.basic_auth import basic_auth
+from src.core.utils.schema import BaseResponse
 
 router = APIRouter(prefix="/roles", tags=["Roles"])
 

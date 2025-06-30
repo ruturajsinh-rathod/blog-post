@@ -6,14 +6,14 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import load_only
 
-from apps.enums import TokenTypeEnum
-from apps.v1.user.exceptions import UserNotFound
-from apps.v1.user.models.user import UserModel
-from apps.v1.user.schemas import LoginResponse
-from apps.v1.user.schemas.response import RefreshTokenResponse
-from core.auth import create_token, decode_token
-from core.db import db_session
-from core.utils.hashing import verify_password
+from src.apps.enums import TokenTypeEnum
+from src.apps.v1.user.exceptions import UserNotFound
+from src.apps.v1.user.models.user import UserModel
+from src.apps.v1.user.schemas import LoginResponse
+from src.apps.v1.user.schemas.response import RefreshTokenResponse
+from src.core.auth import create_token, decode_token
+from database.db import db_session
+from src.core.utils.hashing import verify_password
 
 security = HTTPBearer()
 

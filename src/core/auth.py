@@ -9,14 +9,14 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-import constants.messages as constants
-from apps.enums import TokenTypeEnum
-from apps.v1.user.enums import RoleEnum
-from apps.v1.user.exceptions import UnauthorizedAccessException, UserNotFound
-from apps.v1.user.models.user import UserModel
-from config import settings
-from core.db import db_session
-from core.exceptions import InvalidJWTTokenException
+import src.constants.messages as constants
+from src.apps.enums import TokenTypeEnum
+from src.apps.v1.user.enums import RoleEnum
+from src.apps.v1.user.exceptions import UnauthorizedAccessException, UserNotFound
+from src.apps.v1.user.models.user import UserModel
+from config.config import settings
+from database.db import db_session
+from src.core.exceptions import InvalidJWTTokenException
 
 SECRET_KEY = settings.JWT_SECRET_KEY
 ALGORITHM = settings.JWT_ALGORITHM

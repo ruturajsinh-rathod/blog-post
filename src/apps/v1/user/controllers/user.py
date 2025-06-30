@@ -2,9 +2,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, status
 
-from apps.v1.user.schemas import CreateUserRequest, LoginRequest, LoginResponse, UserResponse
-from apps.v1.user.services import UserService
-from core.utils.schema import BaseResponse
+from src.apps.v1.user.schemas import CreateUserRequest, UserResponse
+from src.apps.v1.user.services import UserService
+from src.core.utils.schema import BaseResponse
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

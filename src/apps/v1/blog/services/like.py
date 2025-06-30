@@ -5,12 +5,12 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.v1.blog.exceptions import BlogNotFoundException
-from apps.v1.blog.models.blogs import BlogModel
-from apps.v1.blog.models.likes import LikeModel
-from apps.v1.blog.schemas.response import LikeResponse
-from apps.v1.user.models.user import UserModel
-from core.db import db_session
+from src.apps.v1.blog.exceptions import BlogNotFoundException
+from src.apps.v1.blog.models.blogs import BlogModel
+from src.apps.v1.blog.models.likes import LikeModel
+from src.apps.v1.blog.schemas.response import LikeResponse
+from src.apps.v1.user.models.user import UserModel
+from database.db import db_session
 
 
 class LikeService:

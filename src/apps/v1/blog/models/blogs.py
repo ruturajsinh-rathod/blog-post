@@ -6,8 +6,8 @@ from uuid import UUID
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from core.db import Base
-from core.utils.mixins import TimeStampMixin
+from database.db import Base
+from src.core.utils.mixins import TimeStampMixin
 
 
 class BlogModel(Base, TimeStampMixin):

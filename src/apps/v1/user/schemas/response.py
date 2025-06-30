@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import EmailStr
 
-from core.utils import CamelCaseModel
+from src.core.utils import CamelCaseModel
 
 
 class LoginResponse(CamelCaseModel):

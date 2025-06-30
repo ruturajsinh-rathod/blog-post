@@ -3,12 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, Body, Depends, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from apps.v1.auth.services.auth import AuthService
-from apps.v1.user.schemas import LoginRequest, LoginResponse
-from apps.v1.user.schemas.response import RefreshTokenResponse
-from core.utils.schema import BaseResponse
+from src.apps.v1.auth.services.auth import AuthService
+from src.apps.v1.user.schemas import LoginRequest, LoginResponse
+from src.apps.v1.user.schemas.response import RefreshTokenResponse
+from src.core.utils.schema import BaseResponse
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(
+    prefix="/auth", tags=["Authentication"]
+)
 
 security = HTTPBearer()
 

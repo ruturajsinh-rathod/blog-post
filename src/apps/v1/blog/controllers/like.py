@@ -3,10 +3,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status, Path
 
-from apps.v1.blog.services.like import LikeService
-from apps.v1.user.models.user import UserModel
-from core.auth import get_current_user
-from core.utils.schema import BaseResponse
+from src.apps.v1.blog.services.like import LikeService
+from src.apps.v1.user.models.user import UserModel
+from src.core.auth import get_current_user
+from src.core.utils.schema import BaseResponse
 
 router = APIRouter(prefix="/likes", tags=["Likes"])
 

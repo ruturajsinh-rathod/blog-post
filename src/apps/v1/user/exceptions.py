@@ -1,5 +1,5 @@
-import constants
-from core.exceptions import AlreadyExistsError, NotFoundError, UnauthorizedError
+import src.constants as constants
+from src.core.exceptions import AlreadyExistsError, NotFoundError, UnauthorizedError
 
 
 class InvalidCredsException(UnauthorizedError):

@@ -1,8 +1,8 @@
 from fastapi import Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
-from apps.v1.blog.exceptions import InvalidCredsException
-from config import settings
+from src.apps.v1.blog.exceptions import InvalidCredsException
+from config.config import settings
 
 
 def basic_auth(credentials: HTTPBasicCredentials = Depends(HTTPBasic())):

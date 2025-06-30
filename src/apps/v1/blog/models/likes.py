@@ -1,23 +1,13 @@
-import uuid
-from datetime import datetime, timezone
+from datetime import timezone
 from typing import Self
-from uuid import UUID
-
-from sqlalchemy import ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from core.db import Base
-from core.utils.mixins import TimeStampMixin
-
+from sqlalchemy import func
 import uuid
 from datetime import datetime
 from uuid import UUID
-
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from core.db import Base
-from core.utils.mixins import TimeStampMixin
+from database.db import Base
 
 
 class LikeModel(Base):

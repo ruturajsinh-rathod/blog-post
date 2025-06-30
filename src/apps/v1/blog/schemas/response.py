@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from core.utils import CamelCaseModel
+from src.core.utils import CamelCaseModel
 
 
 class BlogResponse(CamelCaseModel):

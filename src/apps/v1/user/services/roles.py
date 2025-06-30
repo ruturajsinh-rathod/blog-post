@@ -5,10 +5,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import load_only
 
-from apps import RoleModel
-from apps.v1.user.enums import RoleEnum
-from apps.v1.user.exceptions import UserRoleAlreadyExists, UserRoleNotFound
-from core.db import db_session
+from src.apps.v1.user.models import RoleModel
+from src.apps.v1.user.enums import RoleEnum
+from src.apps.v1.user.exceptions import UserRoleAlreadyExists, UserRoleNotFound
+from database.db import db_session
 
 
 class RoleService:

@@ -1,12 +1,18 @@
+import sys
+import os
+
+# Dynamically add project root to sys.path so config/database/src are visible
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import asyncio
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy.engine import Connection
 
-from apps import Base
-from config import settings
-from core.db import engine
+from src.apps import Base
+from config.config import settings
+from database.db import engine
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)

@@ -1,4 +1,4 @@
-from constants.messages import (
+from src.constants.messages import (
     BLOG_DELETE_SUCCESS,
     BLOG_LIKE_SUCCESS,
     BLOG_NOT_FOUND,

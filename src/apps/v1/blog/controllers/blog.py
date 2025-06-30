@@ -4,12 +4,12 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Path, status
 from fastapi_pagination import Page, Params
 
-from apps.v1.blog.schemas import BlogResponse, CreateBlogRequest
-from apps.v1.blog.services.blog import BlogService
-from apps.v1.user.enums import RoleEnum
-from apps.v1.user.models.user import UserModel
-from core.auth import get_current_user, role_required
-from core.utils.schema import BaseResponse
+from src.apps.v1.blog.schemas import BlogResponse, CreateBlogRequest
+from src.apps.v1.blog.services.blog import BlogService
+from src.apps.v1.user.enums import RoleEnum
+from src.apps.v1.user.models.user import UserModel
+from src.core.auth import get_current_user, role_required
+from src.core.utils.schema import BaseResponse
 
 router = APIRouter(prefix="/blogs", tags=["Blogs"])
 

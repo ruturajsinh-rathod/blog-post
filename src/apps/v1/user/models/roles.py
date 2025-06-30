@@ -5,10 +5,10 @@ from uuid import UUID
 from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from apps.v1.user.enums import RoleEnum
-from apps.v1.user.models.user import UserModel
-from core.db import Base
-from core.utils.mixins import TimeStampMixin
+from src.apps.v1.user.enums import RoleEnum
+from src.apps.v1.user.models.user import UserModel
+from database.db import Base
+from src.core.utils.mixins import TimeStampMixin
 
 
 class RoleModel(Base, TimeStampMixin):

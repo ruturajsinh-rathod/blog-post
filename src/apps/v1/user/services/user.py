@@ -6,11 +6,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import load_only
 
-from apps import RoleModel
-from apps.v1.user.exceptions import UserAlreadyExists, UserRoleNotFound
-from apps.v1.user.models.user import UserModel
-from core.db import db_session
-from core.utils.hashing import hash_password
+from src.apps.v1.user.models import RoleModel
+from src.apps.v1.user.exceptions import UserAlreadyExists, UserRoleNotFound
+from src.apps.v1.user.models.user import UserModel
+from database.db import db_session
+from src.core.utils.hashing import hash_password
 
 
 class UserService:
