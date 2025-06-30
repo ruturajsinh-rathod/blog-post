@@ -7,12 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import load_only
 
 from apps import RoleModel
-from apps.user.exceptions import UserAlreadyExists, UserNotFound, UserRoleNotFound
+from apps.user.exceptions import UserAlreadyExists, UserRoleNotFound
 from apps.user.models.user import UserModel
-from apps.user.schemas import LoginResponse
-from core.auth import create_access_token
 from core.db import db_session
-from core.utils.hashing import hash_password, verify_password
+from core.utils.hashing import hash_password
 
 
 class UserService:
@@ -28,44 +26,6 @@ class UserService:
             session (AsyncSession): An asynchronous SQLAlchemy session injected via dependency.
         """
         self.session = session
-
-    async def login(self, email: str, password: str) -> LoginResponse:
-        """
-        Authenticate a user using their email and password.
-
-        Args:
-            email (str): The email address of the user attempting to log in.
-            password (str): The plain-text password provided for verification.
-
-        Raises:
-            UserNotFound: If no user is found with the provided email or if the password is incorrect.
-
-        Returns:
-            LoginResponse: Contains a JWT access token upon successful authentication.
-        """
-
-        user_query = (
-            select(UserModel)
-            .options(
-                load_only(
-                    UserModel.email,
-                    UserModel.password,
-                )
-            )
-            .where(UserModel.email == email)
-        )
-
-        user = await self.session.scalar(user_query)
-
-        if not user:
-            raise UserNotFound
-
-        if not await verify_password(password, user.password):
-            raise UserNotFound
-
-        access_token = create_access_token(email=user.email)
-
-        return LoginResponse(access_token=access_token)
 
     async def create(self, role_id: UUID, email: str, password: str) -> UserModel:
         """
