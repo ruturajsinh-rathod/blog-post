@@ -1,4 +1,4 @@
-import src.constants as constants
+from src import constants
 from src.core.exceptions import AlreadyExistsError, NotFoundError, UnauthorizedError
 
 

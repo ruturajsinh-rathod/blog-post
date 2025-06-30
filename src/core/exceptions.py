@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import status
 from httpx import Response
 
-import src.constants as constants
+from src import constants
 
 
 class CustomException(Exception):

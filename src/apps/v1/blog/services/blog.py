@@ -8,7 +8,7 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import src.constants as constants
+from src import constants
 from database.db import db_session
 from src.apps.v1.blog.exceptions import BlogNotFoundException, DuplicateBlogException
 from src.apps.v1.blog.models.blogs import BlogModel

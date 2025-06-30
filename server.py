@@ -6,7 +6,7 @@ from fastapi_pagination import add_pagination
 from config.config import settings
 from src.apps.handlers import start_exception_handlers
 from src.apps.v1 import router as v1_router
-from src.constants import SUCCESS
+from src import constants
 
 
 def init_routers(_app: FastAPI) -> None:
@@ -24,13 +24,13 @@ def root_health_path(_app: FastAPI) -> None:
     @_app.get("/", include_in_schema=False)
     def root() -> JSONResponse:
         return JSONResponse(
-            status_code=status.HTTP_200_OK, content={"message": SUCCESS}
+            status_code=status.HTTP_200_OK, content={"message": constants.SUCCESS}
         )
 
     @_app.get("/healthcheck", include_in_schema=False)
     def healthcheck() -> JSONResponse:
         return JSONResponse(
-            status_code=status.HTTP_200_OK, content={"message": SUCCESS}
+            status_code=status.HTTP_200_OK, content={"message": constants.SUCCESS}
         )
 
 
