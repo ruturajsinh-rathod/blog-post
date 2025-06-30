@@ -1,17 +1,14 @@
-from datetime import datetime, timezone
-from typing import Annotated, Any, Coroutine
+from typing import Annotated
 from uuid import UUID
 
 from fastapi import Depends
-from fastapi_pagination import Page, Params
-from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import constants
-from apps.blog.exceptions import BlogNotFoundException, DuplicateBlogException
+from apps.blog.exceptions import BlogNotFoundException
 from apps.blog.models.blogs import BlogModel
 from apps.blog.models.likes import LikeModel
+from apps.blog.schemas.response import LikeResponse
 from apps.user.models.user import UserModel
 from core.db import db_session
 
@@ -34,23 +31,23 @@ class LikeService:
 
         self.session = session
 
-    async def create(self, user: UserModel, blog_id:UUID) -> dict[str, str]:
+    async def create(self, user: UserModel, blog_id:UUID) -> LikeResponse:
         """
-        Create a new blog post in the database.
+            Add or remove a like for a blog post by the given user.
 
-        Checks if a blog with the same name already exists. If found, raises a DuplicateBlogException.
+            If the blog post exists and the user has already liked it, the like is removed (dislike).
+            If the user has not liked the blog post yet, a new like is added.
 
-        Args:
-            name (str): The unique name or title for the blog post.
-            content (str): The content or body of the blog post.
-            user (UserModel): The user creating the blog post.
+            Args:
+                user (UserModel): The user performing the like or unlike action.
+                blog_id (UUID): The unique identifier of the blog post to like or unlike.
 
-        Raises:
-            DuplicateBlogException: If a blog with the same name already exists.
+            Returns:
+                LikeResponse: An object indicating the blog ID and the like status (True if liked, False if unliked).
 
-        Returns:
-            BlogModel: The newly created blog post instance.
-        """
+            Raises:
+                BlogNotFoundException: If the blog post with the given ID does not exist.
+            """
 
         blog = await self.session.scalar(
             select(BlogModel).where(BlogModel.id == blog_id)
@@ -59,8 +56,18 @@ class LikeService:
         if not blog:
             raise BlogNotFoundException
 
+        existing_like = await self.session.scalar(
+            select(LikeModel).where(LikeModel.user_id == user.id,
+                                    LikeModel.blog_id == blog_id)
+        )
+
+        if existing_like:
+            await self.session.delete(existing_like)
+
+            return LikeResponse(blog_id=blog_id, like=False)
+
+
         like = LikeModel.create(user_id=user.id, blog_id=blog_id)
 
-        # user.likes.append(like)
         self.session.add(like)
-        return {"message": constants.BLOG_LIKE_SUCCESS}
+        return LikeResponse(blog_id=blog_id, like=True)

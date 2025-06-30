@@ -21,3 +21,16 @@ class BlogResponse(CamelCaseModel):
     author_id: UUID
     created_at: datetime
     updated_at: datetime
+
+
+class LikeResponse(CamelCaseModel):
+    """
+    Response model representing the result of a like or unlike action on a blog post.
+
+    Attributes:
+        blog_id (UUID): The unique identifier of the blog post.
+        like (bool): Indicates whether the post is liked (True) or unliked (False) after the action.
+    """
+
+    blog_id: UUID
+    like: bool

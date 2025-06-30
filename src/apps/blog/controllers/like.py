@@ -3,8 +3,6 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status, Path
 
-from apps.blog.schemas import BlogResponse, CreateBlogRequest
-from apps.blog.services.blog import BlogService
 from apps.blog.services.like import LikeService
 from apps.user.models.user import UserModel
 from core.auth import get_current_user
@@ -26,15 +24,21 @@ async def create(
 blog_id: Annotated[UUID, Path()],
 ) -> BaseResponse:
     """
-    Create a new blog post.
+        Like or unlike a blog post.
 
-    Args:
-        user (UserModel): The currently authenticated user.
-        request (CreateBlogRequest): The request body containing blog details.
-        service (BlogService): The blog service for handling business logic.
+        If the blog post exists and the user has already liked it, the like will be removed (unlike).
+        If the user has not liked the blog post yet, a new like will be created.
 
-    Returns:
-        BaseResponse[BlogResponse]: The response containing the created blog details.
+        Args:
+            user (UserModel): The currently authenticated user.
+            service (LikeService): Service handling the like logic.
+            blog_id (UUID): The unique identifier of the blog post to like or unlike.
+
+        Returns:
+            BaseResponse: A standardized response containing the like status and blog ID.
+
+        Raises:
+            BlogNotFoundException: If the blog post with the given ID does not exist.
     """
 
     return BaseResponse(
