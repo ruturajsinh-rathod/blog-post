@@ -1,9 +1,8 @@
 from fastapi import APIRouter
+
 from src.apps.v1.auth.controllers import auth_router
-from src.apps.v1.blog.controllers import blog_router
-from src.apps.v1.blog.controllers import like_router
-from src.apps.v1.user.controllers import role_router
-from src.apps.v1.user.controllers import user_router
+from src.apps.v1.blog.controllers import blog_router, like_router
+from src.apps.v1.user.controllers import role_router, user_router
 
 router = APIRouter(prefix="/api/v1")
 

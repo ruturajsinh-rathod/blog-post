@@ -1,10 +1,9 @@
-from datetime import timezone
-from typing import Self
-from sqlalchemy import func
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import Self
 from uuid import UUID
-from sqlalchemy import ForeignKey, UniqueConstraint
+
+from sqlalchemy import ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.db import Base
@@ -24,8 +23,12 @@ class LikeModel(Base):
     __tablename__ = "likes"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    blog_id: Mapped[UUID] = mapped_column(ForeignKey("blogs.id", ondelete="CASCADE"), nullable=False)
+    user_id: Mapped[UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    blog_id: Mapped[UUID] = mapped_column(
+        ForeignKey("blogs.id", ondelete="CASCADE"), nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(
         default=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
         server_default=func.now(),

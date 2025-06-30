@@ -3,11 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi_pagination import add_pagination
 
-from src.constants import SUCCESS
+from config.config import settings
 from src.apps.handlers import start_exception_handlers
 from src.apps.v1 import router as v1_router
-
-from config.config import settings
+from src.constants import SUCCESS
 
 
 def init_routers(_app: FastAPI) -> None:

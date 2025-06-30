@@ -25,6 +25,7 @@ class RefreshTokenResponse(CamelCaseModel):
         access_token (str): The newly issued access token
             that can be used for authenticated requests.
     """
+
     access_token: str
 
 

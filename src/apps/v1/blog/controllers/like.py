@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status, Path
+from fastapi import APIRouter, Depends, Path, status
 
 from src.apps.v1.blog.services.like import LikeService
 from src.apps.v1.user.models.user import UserModel
@@ -21,24 +21,24 @@ router = APIRouter(prefix="/likes", tags=["Likes"])
 async def create(
     user: Annotated[UserModel, Depends(get_current_user)],
     service: Annotated[LikeService, Depends()],
-blog_id: Annotated[UUID, Path()],
+    blog_id: Annotated[UUID, Path()],
 ) -> BaseResponse:
     """
-        Like or unlike a blog post.
+    Like or unlike a blog post.
 
-        If the blog post exists and the user has already liked it, the like will be removed (unlike).
-        If the user has not liked the blog post yet, a new like will be created.
+    If the blog post exists and the user has already liked it, the like will be removed (unlike).
+    If the user has not liked the blog post yet, a new like will be created.
 
-        Args:
-            user (UserModel): The currently authenticated user.
-            service (LikeService): Service handling the like logic.
-            blog_id (UUID): The unique identifier of the blog post to like or unlike.
+    Args:
+        user (UserModel): The currently authenticated user.
+        service (LikeService): Service handling the like logic.
+        blog_id (UUID): The unique identifier of the blog post to like or unlike.
 
-        Returns:
-            BaseResponse: A standardized response containing the like status and blog ID.
+    Returns:
+        BaseResponse: A standardized response containing the like status and blog ID.
 
-        Raises:
-            BlogNotFoundException: If the blog post with the given ID does not exist.
+    Raises:
+        BlogNotFoundException: If the blog post with the given ID does not exist.
     """
 
     return BaseResponse(

@@ -6,16 +6,17 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import load_only
 
+from database.db import db_session
 from src.apps.enums import TokenTypeEnum
+from src.apps.v1.auth.utils.hashing import verify_password
 from src.apps.v1.user.exceptions import UserNotFound
 from src.apps.v1.user.models.user import UserModel
 from src.apps.v1.user.schemas import LoginResponse
 from src.apps.v1.user.schemas.response import RefreshTokenResponse
 from src.core.auth import create_token, decode_token
-from database.db import db_session
-from src.apps.v1.auth.utils.hashing import verify_password
 
 security = HTTPBearer()
+
 
 class AuthService:
     """
@@ -70,22 +71,24 @@ class AuthService:
 
         return LoginResponse(access_token=access_token, refresh_token=refresh_token)
 
-    async def refresh(self, credentials: HTTPAuthorizationCredentials = Depends(security)) -> RefreshTokenResponse:
+    async def refresh(
+        self, credentials: HTTPAuthorizationCredentials = Depends(security)
+    ) -> RefreshTokenResponse:
         """
-            Refresh the access token using a valid refresh token.
+        Refresh the access token using a valid refresh token.
 
-            This method validates the provided refresh token, extracts the payload,
-            and generates a new access token for the user.
+        This method validates the provided refresh token, extracts the payload,
+        and generates a new access token for the user.
 
-            Args:
-                credentials (HTTPAuthorizationCredentials): The security credentials extracted
-                    from the Authorization header, containing the refresh token.
+        Args:
+            credentials (HTTPAuthorizationCredentials): The security credentials extracted
+                from the Authorization header, containing the refresh token.
 
-            Returns:
-                RefreshTokenResponse: An object containing the newly generated access token.
+        Returns:
+            RefreshTokenResponse: An object containing the newly generated access token.
 
-            Raises:
-                HTTPException: If the refresh token is invalid, expired, or of an incorrect type.
+        Raises:
+            HTTPException: If the refresh token is invalid, expired, or of an incorrect type.
         """
 
         refresh_token = credentials.credentials

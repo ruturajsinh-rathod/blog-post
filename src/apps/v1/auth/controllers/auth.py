@@ -8,11 +8,10 @@ from src.apps.v1.user.schemas import LoginRequest, LoginResponse
 from src.apps.v1.user.schemas.response import RefreshTokenResponse
 from src.core.utils.schema import BaseResponse
 
-router = APIRouter(
-    prefix="/auth", tags=["Authentication"]
-)
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 security = HTTPBearer()
+
 
 @router.post(
     "/login",
@@ -38,6 +37,7 @@ async def login(
         data=await service.login(**request.model_dump()), code=status.HTTP_201_CREATED
     )
 
+
 @router.post(
     "/refresh",
     status_code=status.HTTP_201_CREATED,
@@ -46,8 +46,8 @@ async def login(
     operation_id="refresh_token",
 )
 async def refresh_token(
-        service: Annotated[AuthService, Depends()],
-        credentials: HTTPAuthorizationCredentials = Depends(security),
+    service: Annotated[AuthService, Depends()],
+    credentials: HTTPAuthorizationCredentials = Depends(security),
 ) -> BaseResponse[RefreshTokenResponse]:
     """
     Generate a new access token using a valid refresh token.

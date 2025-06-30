@@ -5,9 +5,9 @@ from uuid import UUID
 from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from database.db import Base
 from src.apps.v1.user.enums import RoleEnum
 from src.apps.v1.user.models.user import UserModel
-from database.db import Base
 from src.core.utils.mixins import TimeStampMixin
 
 
