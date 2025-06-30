@@ -13,6 +13,7 @@ from constants.messages import (
     USER_NOT_FOUND,
     USER_ROLE_FOUND,
     USER_ROLE_NOT_FOUND,
+BLOG_LIKE_SUCCESS
 )
 
 __all__ = [
@@ -30,4 +31,5 @@ __all__ = [
     "UNAUTHORIZEDACCESS",
     "DUPLICATE_BLOG",
     "BLOG_DELETE_SUCCESS",
+    "BLOG_LIKE_SUCCESS"
 ]
