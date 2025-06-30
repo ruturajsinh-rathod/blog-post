@@ -1,4 +1,5 @@
 from typing import Optional
+
 import uvicorn
 
 from config import settings

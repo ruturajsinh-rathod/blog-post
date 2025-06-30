@@ -8,7 +8,6 @@ from apps import Base
 from config import settings
 from core.db import engine
 
-
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
@@ -20,7 +19,10 @@ target_metadata = Base.metadata
 
 def do_run_migrations(connection: Connection) -> None:
     context.configure(
-        connection=connection, target_metadata=target_metadata, version_table="auth_alembic_version", compare_type=True
+        connection=connection,
+        target_metadata=target_metadata,
+        version_table="auth_alembic_version",
+        compare_type=True,
     )
     with context.begin_transaction():
         context.run_migrations()

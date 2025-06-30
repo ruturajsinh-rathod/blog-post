@@ -4,10 +4,12 @@ from fastapi.responses import JSONResponse
 from fastapi_pagination import add_pagination
 
 import constants
-from apps.blog.controllers import blog_router, like_router
-from apps.auth.controllers import auth_router
 from apps.handlers import start_exception_handlers
-from apps.user.controllers import role_router, user_router
+from apps.v1.auth.controllers import auth_router as v1_auth_router
+from apps.v1.blog.controllers import blog_router as v1_blog_router
+from apps.v1.blog.controllers import like_router as v1_like_router
+from apps.v1.user.controllers import role_router as v1_role_router
+from apps.v1.user.controllers import user_router as v1_user_router
 from config import settings
 
 
@@ -15,11 +17,11 @@ def init_routers(_app: FastAPI) -> None:
     """
     Initialize all routers.
     """
-    _app.include_router(blog_router)
-    _app.include_router(auth_router)
-    _app.include_router(user_router)
-    _app.include_router(role_router)
-    _app.include_router(like_router)
+    _app.include_router(v1_blog_router)
+    _app.include_router(v1_auth_router)
+    _app.include_router(v1_user_router)
+    _app.include_router(v1_role_router)
+    _app.include_router(v1_like_router)
 
 
 def root_health_path(_app: FastAPI) -> None:

@@ -11,9 +11,9 @@ from sqlalchemy.orm import joinedload
 
 import constants.messages as constants
 from apps.enums import TokenTypeEnum
-from apps.user.enums import RoleEnum
-from apps.user.exceptions import UnauthorizedAccessException, UserNotFound
-from apps.user.models.user import UserModel
+from apps.v1.user.enums import RoleEnum
+from apps.v1.user.exceptions import UnauthorizedAccessException, UserNotFound
+from apps.v1.user.models.user import UserModel
 from config import settings
 from core.db import db_session
 from core.exceptions import InvalidJWTTokenException
@@ -24,6 +24,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXP
 REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXP
 
 security = HTTPBearer()
+
 
 def create_token(email: str, token_type: str):
     """
@@ -50,13 +51,14 @@ def create_token(email: str, token_type: str):
         "aud": settings.APP_NAME,
         "iat": int(now.timestamp()),
         "exp": int(expire.timestamp()),
-        "type": token_type
+        "type": token_type,
     }
 
     encoded_jwt = jwt.encode(
         claims, key=settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
     )
     return encoded_jwt
+
 
 def decode_token(token: str, expected_type: str):
     """
@@ -96,6 +98,7 @@ def decode_token(token: str, expected_type: str):
             detail="Invalid or expired token",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
 
 async def get_authenticated_user(
     session: Annotated[AsyncSession, Depends(db_session)],

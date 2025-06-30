@@ -1,4 +1,4 @@
-exclude: (src/migrations)
+exclude: (migrations)
 repos:
   - repo: https://github.com/psf/black
     rev: 24.3.0

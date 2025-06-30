@@ -1,5 +1,6 @@
 import enum
 
+
 class TokenTypeEnum(str, enum.Enum):
     """
     Enumeration of possible token types within the system.

@@ -1,7 +1,7 @@
 from fastapi import Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
-from apps.blog.exceptions import InvalidCredsException
+from apps.v1.blog.exceptions import InvalidCredsException
 from config import settings
 
 
