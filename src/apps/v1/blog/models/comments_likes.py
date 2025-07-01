@@ -1,7 +1,7 @@
 import uuid
+from datetime import datetime, timezone
 from typing import Self
 from uuid import UUID
-from datetime import datetime, timezone
 
 from sqlalchemy import ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -23,16 +23,24 @@ class CommentLikeModel(Base):
     __tablename__ = "comment_likes"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    comment_id: Mapped[UUID] = mapped_column(ForeignKey("comments.id", ondelete="CASCADE"), nullable=False)
+    user_id: Mapped[UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    comment_id: Mapped[UUID] = mapped_column(
+        ForeignKey("comments.id", ondelete="CASCADE"), nullable=False
+    )
 
     created_at: Mapped[datetime] = mapped_column(
         default=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
-        server_default=func.now()
+        server_default=func.now(),
     )
 
-    user: Mapped["UserModel"] = relationship("UserModel", back_populates="comment_likes")
-    comment: Mapped["CommentModel"] = relationship("CommentModel", back_populates="likes")
+    user: Mapped["UserModel"] = relationship(
+        "UserModel", back_populates="comment_likes"
+    )
+    comment: Mapped["CommentModel"] = relationship(
+        "CommentModel", back_populates="likes"
+    )
 
     __table_args__ = (
         UniqueConstraint("user_id", "comment_id", name="unique_user_comment_like"),
@@ -50,8 +58,4 @@ class CommentLikeModel(Base):
         Returns:
             CommentLikeModel: A new instance of CommentLikeModel with the provided data.
         """
-        return cls(
-            id=uuid.uuid4(),
-            user_id=user_id,
-            comment_id=comment_id
-        )
+        return cls(id=uuid.uuid4(), user_id=user_id, comment_id=comment_id)

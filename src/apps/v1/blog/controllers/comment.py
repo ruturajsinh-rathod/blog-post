@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, status
 
-from src.apps.v1.blog.schemas.response import ReplyResponse, CommentLikeResponse
+from src.apps.v1.blog.schemas.response import CommentLikeResponse, ReplyResponse
 from src.apps.v1.blog.services.comment import CommentService
 from src.apps.v1.user.models.user import UserModel
 from src.core.auth import get_current_user
@@ -21,22 +21,22 @@ router = APIRouter(prefix="/comments", tags=["Comments"])
 )
 async def get_replies(
     _: Annotated[UserModel, Depends(get_current_user)],
-        comment_id: Annotated[UUID, Path()],
-        service: Annotated[CommentService, Depends()],
+    comment_id: Annotated[UUID, Path()],
+    service: Annotated[CommentService, Depends()],
 ) -> BaseResponse[list[ReplyResponse]]:
     """
-        Retrieve replies for a comment.
+    Retrieve replies for a comment.
 
-        This endpoint returns the list of replies for the specified parent comment.
+    This endpoint returns the list of replies for the specified parent comment.
 
-        Args:
-            _ (UserModel): The currently authenticated user (authorization only).
-            comment_id (UUID): The unique identifier of the parent comment.
-            service (CommentService): The comment service handling business logic.
+    Args:
+        _ (UserModel): The currently authenticated user (authorization only).
+        comment_id (UUID): The unique identifier of the parent comment.
+        service (CommentService): The comment service handling business logic.
 
-        Returns:
-            BaseResponse[list[ReplyResponse]]: A response containing the list of replies.
-        """
+    Returns:
+        BaseResponse[list[ReplyResponse]]: A response containing the list of replies.
+    """
     return BaseResponse(
         data=await service.get_replies(comment_id=comment_id),
         code=status.HTTP_200_OK,
@@ -53,28 +53,29 @@ async def get_replies(
 )
 async def like_or_unlike_comment(
     user: Annotated[UserModel, Depends(get_current_user)],
-comment_id: Annotated[UUID, Path()],
+    comment_id: Annotated[UUID, Path()],
     service: Annotated[CommentService, Depends()],
 ) -> BaseResponse[CommentLikeResponse]:
     """
-       Like or unlike a comment.
+    Like or unlike a comment.
 
-       This endpoint allows an authenticated user to like or unlike the specified comment.
-       If the user has already liked the comment, the like will be removed (unlike).
-       Otherwise, the comment will be liked.
+    This endpoint allows an authenticated user to like or unlike the specified comment.
+    If the user has already liked the comment, the like will be removed (unlike).
+    Otherwise, the comment will be liked.
 
-       Args:
-           user (UserModel): The currently authenticated user.
-           comment_id (UUID): The unique identifier of the comment.
-           service (CommentService): The comment service handling business logic.
+    Args:
+        user (UserModel): The currently authenticated user.
+        comment_id (UUID): The unique identifier of the comment.
+        service (CommentService): The comment service handling business logic.
 
-       Returns:
-           BaseResponse[CommentLikeResponse]: A response containing the updated like status.
-       """
+    Returns:
+        BaseResponse[CommentLikeResponse]: A response containing the updated like status.
+    """
     return BaseResponse(
         data=await service.like_or_unlike_comment(user=user, comment_id=comment_id),
         code=status.HTTP_200_OK,
     )
+
 
 @router.delete(
     "/{comment_id}",
@@ -86,23 +87,23 @@ comment_id: Annotated[UUID, Path()],
 )
 async def remove_comment(
     user: Annotated[UserModel, Depends(get_current_user)],
-comment_id: Annotated[UUID, Path()],
+    comment_id: Annotated[UUID, Path()],
     service: Annotated[CommentService, Depends()],
 ) -> BaseResponse:
     """
-        Delete a comment.
+    Delete a comment.
 
-        This endpoint allows the author of a comment to delete it.
-        Only the comment's author or authorized users can perform this action.
+    This endpoint allows the author of a comment to delete it.
+    Only the comment's author or authorized users can perform this action.
 
-        Args:
-            user (UserModel): The currently authenticated user.
-            comment_id (UUID): The unique identifier of the comment to delete.
-            service (CommentService): The comment service handling business logic.
+    Args:
+        user (UserModel): The currently authenticated user.
+        comment_id (UUID): The unique identifier of the comment to delete.
+        service (CommentService): The comment service handling business logic.
 
-        Returns:
-            BaseResponse: A response confirming successful deletion of the comment.
-        """
+    Returns:
+        BaseResponse: A response confirming successful deletion of the comment.
+    """
     return BaseResponse(
         data=await service.remove_comment(user=user, comment_id=comment_id),
         code=status.HTTP_200_OK,

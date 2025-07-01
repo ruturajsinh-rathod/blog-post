@@ -6,13 +6,17 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src import constants
 from database.db import db_session
-from src.apps.v1.blog.models import CommentLikeModel
-from src.apps.v1.blog.models import CommentModel, BlogModel
-from src.apps.v1.blog.exceptions import BlogNotFoundException, ParentCommentNotFoundException, \
-    InvalidParentCommentBlogException, InvalidParentCommentNestingException, CommentNotFoundException, \
-    InvalidCredsException
+from src import constants
+from src.apps.v1.blog.exceptions import (
+    BlogNotFoundException,
+    CommentNotFoundException,
+    InvalidCredsException,
+    InvalidParentCommentBlogException,
+    InvalidParentCommentNestingException,
+    ParentCommentNotFoundException,
+)
+from src.apps.v1.blog.models import BlogModel, CommentLikeModel, CommentModel
 from src.apps.v1.blog.schemas.response import CommentLikeResponse
 from src.apps.v1.user.enums import RoleEnum
 from src.apps.v1.user.models import UserModel
@@ -36,8 +40,13 @@ class CommentService:
 
         self.session = session
 
-    async def create_comment(self, content: str, blog_id: UUID, user: UserModel,
-                             parent_comment_id: UUID | None = None) -> CommentModel:
+    async def create_comment(
+        self,
+        content: str,
+        blog_id: UUID,
+        user: UserModel,
+        parent_comment_id: UUID | None = None,
+    ) -> CommentModel:
         """
         Create a new comment on a blog or as a reply to another comment.
 
@@ -62,9 +71,7 @@ class CommentService:
 
         if parent_comment_id:
             parent_comment = await self.session.scalar(
-                select(CommentModel).where(
-                    CommentModel.id == parent_comment_id
-                )
+                select(CommentModel).where(CommentModel.id == parent_comment_id)
             )
             if parent_comment.parent_comment_id:
                 raise InvalidParentCommentNestingException
@@ -77,7 +84,7 @@ class CommentService:
             content=content,
             author_id=user.id,
             blog_id=blog_id,
-            parent_comment_id=parent_comment_id
+            parent_comment_id=parent_comment_id,
         )
 
         self.session.add(comment)
@@ -85,23 +92,21 @@ class CommentService:
 
     async def get_parent_comments(self, blog_id: UUID) -> BlogModel:
         """
-            Retrieve a blog along with its top-level (parent) comments.
+        Retrieve a blog along with its top-level (parent) comments.
 
-            Args:
-                blog_id (UUID): The unique identifier of the blog.
+        Args:
+            blog_id (UUID): The unique identifier of the blog.
 
-            Returns:
-                BlogModel: The blog instance including its parent comments.
+        Returns:
+            BlogModel: The blog instance including its parent comments.
 
-            Raises:
-                BlogNotFoundException: If the blog with the given ID does not exist or is deleted.
-            """
+        Raises:
+            BlogNotFoundException: If the blog with the given ID does not exist or is deleted.
+        """
         blog = await self.session.scalar(
             select(BlogModel)
             .options(joinedload(BlogModel.comments))
-            .where(
-                BlogModel.id == blog_id, BlogModel.deleted_at.is_(None)
-            )
+            .where(BlogModel.id == blog_id, BlogModel.deleted_at.is_(None))
         )
 
         if not blog:
@@ -111,43 +116,42 @@ class CommentService:
 
     async def get_replies(self, comment_id: UUID) -> Sequence[CommentModel]:
         """
-           Retrieve all replies for a given comment.
+        Retrieve all replies for a given comment.
 
-           Args:
-               comment_id (UUID): The unique identifier of the parent comment.
+        Args:
+            comment_id (UUID): The unique identifier of the parent comment.
 
-           Returns:
-               Sequence[CommentModel]: A list of replies to the specified comment.
-           """
+        Returns:
+            Sequence[CommentModel]: A list of replies to the specified comment.
+        """
 
         comments = await self.session.scalars(
-            select(CommentModel)
-            .where(
-                CommentModel.parent_comment_id == comment_id
-            )
+            select(CommentModel).where(CommentModel.parent_comment_id == comment_id)
         )
 
         return comments.all()
 
-    async def like_or_unlike_comment(self, comment_id: UUID, user: UserModel) -> CommentLikeResponse:
+    async def like_or_unlike_comment(
+        self, comment_id: UUID, user: UserModel
+    ) -> CommentLikeResponse:
         """
-           Toggle like status for a comment.
+        Toggle like status for a comment.
 
-           If the user has already liked the comment, the like will be removed (unlike).
-           Otherwise, a new like will be added.
+        If the user has already liked the comment, the like will be removed (unlike).
+        Otherwise, a new like will be added.
 
-           Args:
-               comment_id (UUID): The unique identifier of the comment.
-               user (UserModel): The currently authenticated user.
+        Args:
+            comment_id (UUID): The unique identifier of the comment.
+            user (UserModel): The currently authenticated user.
 
-           Returns:
-               CommentLikeResponse: The updated like status of the comment.
-           """
+        Returns:
+            CommentLikeResponse: The updated like status of the comment.
+        """
 
         existing_like = await self.session.scalar(
             select(CommentLikeModel).where(
                 CommentLikeModel.user_id == user.id,
-                CommentLikeModel.comment_id == comment_id
+                CommentLikeModel.comment_id == comment_id,
             )
         )
 
@@ -163,25 +167,23 @@ class CommentService:
 
     async def remove_comment(self, user: UserModel, comment_id: UUID) -> dict[str, str]:
         """
-            Delete a comment if the user is authorized.
+        Delete a comment if the user is authorized.
 
-            Only the comment's author or an admin can delete the comment.
+        Only the comment's author or an admin can delete the comment.
 
-            Args:
-                user (UserModel): The currently authenticated user.
-                comment_id (UUID): The unique identifier of the comment to delete.
+        Args:
+            user (UserModel): The currently authenticated user.
+            comment_id (UUID): The unique identifier of the comment to delete.
 
-            Returns:
-                dict[str, str]: A confirmation message upon successful deletion.
+        Returns:
+            dict[str, str]: A confirmation message upon successful deletion.
 
-            Raises:
-                CommentNotFoundException: If the comment does not exist.
-                InvalidCredsException: If the user is not authorized to delete the comment.
-            """
+        Raises:
+            CommentNotFoundException: If the comment does not exist.
+            InvalidCredsException: If the user is not authorized to delete the comment.
+        """
         comment = await self.session.scalar(
-            select(CommentModel).where(
-                CommentModel.id == comment_id
-            )
+            select(CommentModel).where(CommentModel.id == comment_id)
         )
 
         if not comment:
