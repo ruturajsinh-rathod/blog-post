@@ -1,6 +1,6 @@
 import logging
 
-from core.utils.schema import BaseResponse, CamelCaseModel
+from src.core.utils.schema import BaseResponse, CamelCaseModel
 
 
 def setup_logger(name: str) -> logging.Logger:

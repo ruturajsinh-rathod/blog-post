@@ -4,7 +4,7 @@ from fastapi import status as st
 from pydantic import BaseModel
 from pydantic.alias_generators import to_camel
 
-import constants.messages as constants
+import src.constants.messages as constants
 
 
 class CamelCaseModel(BaseModel):

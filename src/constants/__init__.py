@@ -1,5 +1,6 @@
-from constants.messages import (
+from src.constants.messages import (
     BLOG_DELETE_SUCCESS,
+    BLOG_LIKE_SUCCESS,
     BLOG_NOT_FOUND,
     DUPLICATE_BLOG,
     ERROR,
@@ -13,7 +14,6 @@ from constants.messages import (
     USER_NOT_FOUND,
     USER_ROLE_FOUND,
     USER_ROLE_NOT_FOUND,
-BLOG_LIKE_SUCCESS
 )
 
 __all__ = [
@@ -31,5 +31,5 @@ __all__ = [
     "UNAUTHORIZEDACCESS",
     "DUPLICATE_BLOG",
     "BLOG_DELETE_SUCCESS",
-    "BLOG_LIKE_SUCCESS"
+    "BLOG_LIKE_SUCCESS",
 ]
