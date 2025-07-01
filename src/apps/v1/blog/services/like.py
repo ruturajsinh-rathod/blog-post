@@ -4,12 +4,13 @@ from uuid import UUID
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from database.db import db_session
 from src.apps.v1.blog.exceptions import BlogNotFoundException
 from src.apps.v1.blog.models.blogs import BlogModel
 from src.apps.v1.blog.models.likes import LikeModel
-from src.apps.v1.blog.schemas.response import LikeResponse
+from src.apps.v1.blog.schemas.response import LikeResponse, UserResponse, UserLikedResponse
 from src.apps.v1.user.models.user import UserModel
 
 
@@ -71,3 +72,21 @@ class LikeService:
 
         self.session.add(like)
         return LikeResponse(blog_id=blog_id, like=True)
+
+    async def get_likes(self, blog_id: UUID) -> UserLikedResponse:
+        result = await self.session.scalars(
+            select(LikeModel)
+            .options(joinedload(LikeModel.user))
+            .where(LikeModel.blog_id == blog_id)
+        )
+        likes = result.all()
+
+        users = [
+            UserResponse.model_validate(like.user)
+            for like in likes if like.user
+        ]
+
+        return UserLikedResponse(
+            blog_id=blog_id,
+            user=users
+        )

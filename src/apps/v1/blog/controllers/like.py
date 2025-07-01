@@ -3,6 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, status
 
+from src.apps.v1.blog.schemas.response import UserLikedResponse
 from src.apps.v1.blog.services.like import LikeService
 from src.apps.v1.user.models.user import UserModel
 from src.core.auth import get_current_user
@@ -44,4 +45,22 @@ async def create(
     return BaseResponse(
         data=await service.create(user=user, blog_id=blog_id),
         code=status.HTTP_201_CREATED,
+    )
+
+
+@router.get(
+    "/{blog_id}",
+    status_code=status.HTTP_200_OK,
+    name="Get likes of blog",
+    description="Get likes of blog",
+    operation_id="get_likes",
+)
+async def get_likes(
+        _: Annotated[UserModel, Depends(get_current_user)],
+        service: Annotated[LikeService, Depends()],
+        blog_id: Annotated[UUID, Path()],
+) -> BaseResponse[UserLikedResponse]:
+    return BaseResponse(
+        data=await service.get_likes(blog_id=blog_id),
+        code=status.HTTP_200_OK,
     )
