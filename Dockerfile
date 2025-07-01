@@ -27,31 +27,35 @@ COPY . .
 # Runner stage
 FROM python:3.12-alpine AS runner
 
-# Prevents Python from writing .pyc files to disk.
+# Prevent Python from writing .pyc files to disk
 ENV PYTHONDONTWRITEBYTECODE=1
 
-# # Make Python output unbuffered
+# Make Python output unbuffered
 ENV PYTHONUNBUFFERED=1
 
-ENV PYTHONPATH="/code/src"
+# Set Python path for imports
+ENV PYTHONPATH="/code"
 
-# Install runtime packages
+# Install runtime system dependencies
 RUN apk add --no-cache libffi postgresql-libs curl
 
-# Create user, run the app as the app user, not root.
+# Create a non-root user
 RUN addgroup -S app && adduser -S app -G app
 
-# Set user and working dir
+# Switch to non-root user
 USER app
-WORKDIR /code/src
 
-# Copy installed deps and source code
+# Set working directory
+WORKDIR /code
+
+# Copy installed dependencies, binaries, and source code from builder
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /code /code
 
-# Healthcheck
+# Healthcheck to ensure the app is running
 HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:${DOCKER_PORT}/healthcheck || exit 1
 
-# Entrypoint
-ENTRYPOINT ["/bin/sh", "-c", "python main.py migrate && python main.py run"]
+# Default command: run alembic migrations then start app
+CMD alembic upgrade head && python main.py run
