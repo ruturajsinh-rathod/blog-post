@@ -10,7 +10,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy.engine import Connection
 
-from src.apps import Base
+from src.api import Base
 from config.config import database_settings
 from database.db import engine
 

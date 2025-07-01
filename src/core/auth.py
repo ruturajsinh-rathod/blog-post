@@ -12,10 +12,10 @@ from sqlalchemy.orm import joinedload
 import src.constants.messages as constants
 from config.config import jwt_settings, app_settings
 from database.db import db_session
-from src.apps.enums import TokenTypeEnum
-from src.apps.v1.user.enums import RoleEnum
-from src.apps.v1.user.exceptions import UnauthorizedAccessException, UserNotFound
-from src.apps.v1.user.models.user import UserModel
+from src.api.enums import TokenTypeEnum
+from src.api.v1.user.enums import RoleEnum
+from src.api.v1.user.exceptions import UnauthorizedAccessException, UserNotFound
+from src.api.v1.user.models.user import UserModel
 from src.core.exceptions import InvalidJWTTokenException
 
 SECRET_KEY = jwt_settings.JWT_SECRET_KEY
