@@ -2,7 +2,7 @@ from typing import Optional
 
 import uvicorn
 
-from config.config import settings
+from config.config import app_settings
 
 
 def run(
@@ -13,9 +13,9 @@ def run(
     Run the server.
     """
     if not host:
-        host = settings.APP_HOST
+        host = app_settings.APP_HOST
     if not port:
-        port = settings.APP_PORT
+        port = app_settings.APP_PORT
 
     uvicorn.run(
         "server:debug_app",

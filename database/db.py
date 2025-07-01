@@ -3,10 +3,10 @@ from typing import AsyncIterator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-from config.config import settings
+from config.config import database_settings
 
 engine = create_async_engine(
-    str(settings.DATABASE_URL),
+    str(database_settings.DATABASE_URL),
     pool_pre_ping=True,
     pool_recycle=3600,
     pool_size=10,
