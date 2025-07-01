@@ -174,7 +174,7 @@ async def create_comment(
 
 @router.get(
     "/{blog_id}/comments",
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     name="Get top level comments",
     description="Get top level comments",
     operation_id="get_top_level_comments",

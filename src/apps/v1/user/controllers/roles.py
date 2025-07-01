@@ -47,7 +47,7 @@ async def create_role(
 
 @router.get(
     "/",
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     name="get all",
     description="Get all roles",
     operation_id="get_all_roles",

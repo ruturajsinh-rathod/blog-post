@@ -15,7 +15,7 @@ security = HTTPBearer()
 
 @router.post(
     "/login",
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     name="Login",
     description="Login user",
     operation_id="login_user",
@@ -40,7 +40,7 @@ async def login(
 
 @router.post(
     "/refresh",
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     name="Refresh",
     description="Create refresh token",
     operation_id="refresh_token",
