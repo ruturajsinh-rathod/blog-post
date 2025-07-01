@@ -37,6 +37,10 @@ class BlogModel(Base, TimeStampMixin):
         "LikeModel", back_populates="blog", cascade="all, delete-orphan"
     )
 
+    comments: Mapped[list["CommentModel"]] = relationship(
+        "CommentModel", back_populates="blog", cascade="all, delete-orphan"
+    )
+
     @classmethod
     def create(cls, name: str, content: str, author_id: UUID) -> Self:
         """

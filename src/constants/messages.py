@@ -27,3 +27,13 @@ UNAUTHORIZEDACCESS = "You are not authorized to perform this action."
 BLOG_DELETE_SUCCESS = "Blog deleted successfully"
 
 BLOG_LIKE_SUCCESS = "Blog liked successfully"
+
+PARENT_COMMENT_NOT_FOUND = "Parent comment not found."
+
+INVALID_PARENT_COMMENT_BLOG = "Parent comment does not belong to the same blog."
+
+INVALID_PARENT_COMMENT_NESTING = "Only one level of child comments is allowed."
+
+COMMENT_DELETED_SUCCESSFULLY = "Comment deleted successfully."
+
+COMMENT_NOT_FOUND = "Comment not found"

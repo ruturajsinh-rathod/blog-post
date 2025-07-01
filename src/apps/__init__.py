@@ -1,3 +1,13 @@
 from database.db import Base
+from src.apps.v1.blog.models import BlogModel, CommentLikeModel, CommentModel, LikeModel
+from src.apps.v1.user.models import RoleModel, UserModel
 
-__all__ = ["Base"]
+__all__ = [
+    "Base",
+    "BlogModel",
+    "LikeModel",
+    "CommentModel",
+    "CommentLikeModel",
+    "UserModel",
+    "RoleModel",
+]

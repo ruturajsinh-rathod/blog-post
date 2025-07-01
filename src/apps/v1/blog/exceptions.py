@@ -25,3 +25,35 @@ class BlogNotFoundException(NotFoundError):
     """
 
     message = constants.BLOG_NOT_FOUND
+
+
+class ParentCommentNotFoundException(NotFoundError):
+    """
+    Exception raised when the requested parent comment cannot be found.
+    """
+
+    message = constants.PARENT_COMMENT_NOT_FOUND
+
+
+class InvalidParentCommentBlogException(NotFoundError):
+    """
+    Exception raised when the parent comment does not belong to the same blog.
+    """
+
+    message = constants.INVALID_PARENT_COMMENT_BLOG
+
+
+class InvalidParentCommentNestingException(AlreadyExistsError):
+    """
+    Exception raised when attempting to reply to a comment that is already a child comment.
+    """
+
+    message = constants.INVALID_PARENT_COMMENT_NESTING
+
+
+class CommentNotFoundException(NotFoundError):
+    """
+    Exception raised when the requested comment cannot be found.
+    """
+
+    message = constants.COMMENT_NOT_FOUND
