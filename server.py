@@ -4,9 +4,9 @@ from fastapi.responses import JSONResponse
 from fastapi_pagination import add_pagination
 
 from config.config import settings
+from src import constants
 from src.apps.handlers import start_exception_handlers
 from src.apps.v1 import router as v1_router
-from src import constants
 
 
 def init_routers(_app: FastAPI) -> None:

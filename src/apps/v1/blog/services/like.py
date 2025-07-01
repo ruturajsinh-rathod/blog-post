@@ -10,7 +10,7 @@ from database.db import db_session
 from src.apps.v1.blog.exceptions import BlogNotFoundException
 from src.apps.v1.blog.models.blogs import BlogModel
 from src.apps.v1.blog.models.likes import LikeModel
-from src.apps.v1.blog.schemas.response import LikeResponse, UserResponse, UserLikedResponse
+from src.apps.v1.blog.schemas.response import LikeResponse, UserLikedResponse, UserResponse
 from src.apps.v1.user.models.user import UserModel
 
 
@@ -74,6 +74,16 @@ class LikeService:
         return LikeResponse(blog_id=blog_id, like=True)
 
     async def get_likes(self, blog_id: UUID) -> UserLikedResponse:
+        """
+        Retrieve the list of users who liked the specified blog and the total like count.
+
+        Args:
+            blog_id (UUID): The unique identifier of the blog.
+
+        Returns:
+            UserLikedResponse: The response containing the blog ID, list of users who liked the blog, and the total like count.
+        """
+
         result = await self.session.scalars(
             select(LikeModel)
             .options(joinedload(LikeModel.user))
@@ -81,12 +91,6 @@ class LikeService:
         )
         likes = result.all()
 
-        users = [
-            UserResponse.model_validate(like.user)
-            for like in likes if like.user
-        ]
+        users = [UserResponse.model_validate(like.user) for like in likes if like.user]
 
-        return UserLikedResponse(
-            blog_id=blog_id,
-            user=users
-        )
+        return UserLikedResponse(blog_id=blog_id, user=users, total_likes=len(likes))
