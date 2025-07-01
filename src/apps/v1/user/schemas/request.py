@@ -1,6 +1,7 @@
+import re
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator
 
 
 class CreateUserRequest(BaseModel):
@@ -16,6 +17,25 @@ class CreateUserRequest(BaseModel):
     email: EmailStr
     password: str
     role_id: UUID
+
+    @validator("password")
+    def validate_password(cls, value: str) -> str:
+        """
+        Validates password complexity:
+        - At least 8 characters
+        - At least one uppercase letter
+        - At least one lowercase letter
+        - At least one digit
+        - At least one special character
+        """
+        password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$"
+
+        if not re.match(password_regex, value):
+            raise ValueError(
+                "Password must be at least 8 characters long, contain an uppercase letter, "
+                "a lowercase letter, a digit, and a special character."
+            )
+        return value
 
 
 class CreateUserRoleRequest(BaseModel):
