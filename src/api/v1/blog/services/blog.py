@@ -74,7 +74,7 @@ class BlogService:
             Page[BlogModel]: A paginated list of blog posts.
         """
         stmt = select(BlogModel).where(BlogModel.deleted_at.is_(None))
-        return await paginate(self.session, stmt, params)
+        return await paginate(conn=self.session, query=stmt, params=params)
 
     async def get_by_id(self, blog_id: UUID) -> BlogModel:
         """

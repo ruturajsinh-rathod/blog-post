@@ -13,6 +13,7 @@ from src.api.v1.blog.services.like import LikeService
 from src.api.v1.user.enums import RoleEnum
 from src.api.v1.user.models.user import UserModel
 from src.core.auth import get_current_user, role_required
+from src.core.utils.mixins import Default100Page
 from src.core.utils.schema import BaseResponse
 
 router = APIRouter(prefix="/blogs", tags=["Blogs"])
@@ -54,13 +55,13 @@ async def create_blog(
     name="Get all blogs",
     description="Get all blogs",
     operation_id="get_all_blogs",
-    response_model=Page[BlogResponse],
+    response_model=BaseResponse[Page[BlogResponse]],
 )
 async def get_all(
     _: Annotated[bool, Depends(get_current_user)],
     service: Annotated[BlogService, Depends()],
-    params: Params = Depends(),
-) -> Page[BlogResponse]:
+        params: Annotated[Params, Depends(Default100Page)],
+) -> BaseResponse[Page[BlogResponse]]:
     """
     Retrieve a paginated list of all blogs.
 
@@ -70,11 +71,13 @@ async def get_all(
         params (Params): Pagination parameters (page, size).
 
     Returns:
-        Page[BlogResponse]: A paginated list of blogs.
+        BaseResponse[Page[BlogResponse]]: A paginated list of blogs.
     """
 
-    return await service.get_all(params=params)
-
+    return BaseResponse(
+        data=await service.get_all(params=params),
+        code=status.HTTP_200_OK,
+    )
 
 @router.get(
     "/{blog_id}",
