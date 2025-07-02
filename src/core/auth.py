@@ -10,18 +10,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 import src.constants.messages as constants
-from config.config import settings
+from config.config import jwt_settings, app_settings
 from database.db import db_session
-from src.apps.enums import TokenTypeEnum
-from src.apps.v1.user.enums import RoleEnum
-from src.apps.v1.user.exceptions import UnauthorizedAccessException, UserNotFound
-from src.apps.v1.user.models.user import UserModel
+from src.api.enums import TokenTypeEnum
+from src.api.v1.user.enums import RoleEnum
+from src.api.v1.user.exceptions import UnauthorizedAccessException, UserNotFound
+from src.api.v1.user.models.user import UserModel
 from src.core.exceptions import InvalidJWTTokenException
 
-SECRET_KEY = settings.JWT_SECRET_KEY
-ALGORITHM = settings.JWT_ALGORITHM
-ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXP
-REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXP
+SECRET_KEY = jwt_settings.JWT_SECRET_KEY
+ALGORITHM = jwt_settings.JWT_ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = jwt_settings.ACCESS_TOKEN_EXP
+REFRESH_TOKEN_EXPIRE_DAYS = jwt_settings.REFRESH_TOKEN_EXP
 
 security = HTTPBearer()
 
@@ -48,14 +48,14 @@ def create_token(email: str, token_type: str):
 
     claims = {
         "sub": email,
-        "aud": settings.APP_NAME,
+        "aud": app_settings.APP_NAME,
         "iat": int(now.timestamp()),
         "exp": int(expire.timestamp()),
         "type": token_type,
     }
 
     encoded_jwt = jwt.encode(
-        claims, key=settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
+        claims, key=jwt_settings.JWT_SECRET_KEY, algorithm=jwt_settings.JWT_ALGORITHM
     )
     return encoded_jwt
 
@@ -78,9 +78,9 @@ def decode_token(token: str, expected_type: str):
     try:
         payload = jwt.decode(
             token,
-            settings.JWT_SECRET_KEY,
-            algorithms=[settings.JWT_ALGORITHM],
-            audience=settings.APP_NAME,
+            jwt_settings.JWT_SECRET_KEY,
+            algorithms=[jwt_settings.JWT_ALGORITHM],
+            audience=app_settings.APP_NAME,
         )
 
         if payload.get("type") != expected_type:

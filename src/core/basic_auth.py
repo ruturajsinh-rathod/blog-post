@@ -1,8 +1,8 @@
 from fastapi import Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
-from config.config import settings
-from src.apps.v1.blog.exceptions import InvalidCredsException
+from config.config import basic_auth_settings
+from src.api.v1.blog.exceptions import InvalidCredsException
 
 
 def basic_auth(credentials: HTTPBasicCredentials = Depends(HTTPBasic())):
@@ -21,8 +21,8 @@ def basic_auth(credentials: HTTPBasicCredentials = Depends(HTTPBasic())):
     """
 
     if (
-        credentials.username == settings.BASIC_USERNAME
-        and credentials.password == settings.BASIC_PASSWORD
+        credentials.username == basic_auth_settings.BASIC_USERNAME
+        and credentials.password == basic_auth_settings.BASIC_PASSWORD
     ):
         return True
     else:

@@ -3,10 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi_pagination import add_pagination
 
-from config.config import settings
+from config.config import app_settings
 from src import constants
-from src.apps.handlers import start_exception_handlers
-from src.apps.v1 import router as v1_router
+from src.api.handlers import start_exception_handlers
+from src.api.v1 import router as v1_router
 
 
 def init_routers(_app: FastAPI) -> None:
@@ -52,8 +52,8 @@ def create_app(debug: bool = False) -> FastAPI:
     Create a Initialize the FastAPI app.
     """
     _app = FastAPI(
-        title=settings.APP_NAME,
-        version=settings.APP_VERSION,
+        title=app_settings.APP_NAME,
+        version=app_settings.APP_VERSION,
         docs_url="/docs",
         redoc_url="/redoc" if debug else None,
     )
